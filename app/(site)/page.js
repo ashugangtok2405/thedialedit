@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { supabasePublic } from "@/lib/supabasePublic";
 import ProductGrid from "@/components/ProductGrid";
+import HeroWatch from "@/components/HeroWatch";
 
 export const dynamic = "force-dynamic";
 
@@ -33,9 +34,7 @@ export default async function HomePage() {
             </Link>
           </div>
           <div className="hero-visual">
-            <div className="watch-ring">
-              <span className="center-icon">⌚</span>
-            </div>
+            <HeroWatch />
           </div>
         </div>
       </section>
@@ -49,7 +48,7 @@ export default async function HomePage() {
               </Link>
             ))
           ) : (
-            <p style={{ color: "var(--muted)" }}>No products yet — add some from the admin panel.</p>
+            <p style={{ color: "var(--muted)" }}>No products yet.</p>
           )}
         </div>
       </section>
@@ -60,7 +59,7 @@ export default async function HomePage() {
             <h2>Bestsellers</h2>
             <Link href="/shop">View all →</Link>
           </div>
-          <ProductGrid products={bestsellers} emptyMessage="No products yet. Add your first watch from /admin." />
+          <ProductGrid products={bestsellers} emptyMessage="No products yet." />
         </div>
       </section>
 
