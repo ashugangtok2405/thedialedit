@@ -48,8 +48,8 @@ export default function AdminDashboardPage() {
     setForm((f) => ({ ...f, [field]: value }));
   }
 
-  function addFiles(fileList) {
-    setMediaFiles((prev) => [...prev, ...Array.from(fileList)]);
+  function addFiles(files) {
+    setMediaFiles((prev) => [...prev, ...files]);
   }
 
   function removeFile(index) {
@@ -161,8 +161,9 @@ export default function AdminDashboardPage() {
                 accept="image/*,video/*"
                 multiple
                 onChange={(e) => {
-                  addFiles(e.target.files);
+                  const files = Array.from(e.target.files);
                   e.target.value = "";
+                  addFiles(files);
                 }}
               />
               {mediaFiles.length > 0 && (
