@@ -39,7 +39,7 @@ export default async function ProductPage({ params }) {
       </section>
       <section className="section" style={{ paddingTop: 0 }}>
         <div className="container">
-          <div className="section-head">
+          <div className="section-head reveal">
             <h2>You may also like</h2>
           </div>
           <ProductGrid products={related || []} emptyMessage="No related products yet." />

@@ -23,6 +23,11 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${playfair.variable} ${poppins.variable}`}>
+      <head>
+        <noscript>
+          <style>{`.reveal, .reveal-group > *, .hero-text > *, .hero-visual { opacity: 1 !important; transform: none !important; animation: none !important; }`}</style>
+        </noscript>
+      </head>
       <body>{children}</body>
     </html>
   );

@@ -10,7 +10,7 @@ export default function AboutPage() {
         every style, wrist, and budget, delivered anywhere in India.
       </p>
 
-      <div className="about-grid container">
+      <div className="about-grid container reveal-group">
         <div className="about-card">
           <div className="icon">🚚</div>
           <h3 style={{ fontSize: 16 }}>Pan India Delivery</h3>

@@ -175,14 +175,11 @@ nav.main-nav a:hover, nav.main-nav a.active {
 }
 
 .mobile-nav {
-  display: none;
+  display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: 12px 24px 18px;
-  border-bottom: 1px solid var(--border);
   background: var(--black-soft);
 }
-.mobile-nav.open { display: flex; }
 .mobile-nav a { padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
 
 /* ---------- Hero ---------- */
@@ -222,29 +219,6 @@ nav.main-nav a:hover, nav.main-nav a.active {
   display: flex;
   justify-content: center;
 }
-.hero-visual .watch-ring {
-  width: 260px;
-  height: 260px;
-  border-radius: 50%;
-  border: 2px solid var(--gold);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-.hero-visual .watch-ring::before {
-  content: "";
-  position: absolute;
-  inset: 22px;
-  border-radius: 50%;
-  border: 1px solid var(--border);
-}
-.hero-visual .watch-ring .center-icon {
-  font-size: 60px;
-  color: var(--gold-light);
-  font-family: var(--font-serif);
-}
-
 .btn {
   display: inline-flex;
   align-items: center;
@@ -400,6 +374,7 @@ nav.main-nav a:hover, nav.main-nav a.active {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 48px;
+  animation: hero-in-scale 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 @media (max-width: 800px) {
   .product-detail { grid-template-columns: 1fr; }
@@ -422,9 +397,16 @@ nav.main-nav a:hover, nav.main-nav a.active {
   border: 2px solid var(--border);
   background: var(--panel);
   padding: 0;
+  transition: border-color 0.25s ease, transform 0.25s ease;
 }
+.pd-thumb:hover { transform: translateY(-2px); }
 .pd-thumb img, .pd-thumb video { width: 100%; height: 100%; object-fit: cover; }
 .pd-thumb.active { border-color: var(--gold); }
+.pd-image { animation: pd-image-fade 0.35s ease; }
+@keyframes pd-image-fade {
+  from { opacity: 0.3; }
+  to { opacity: 1; }
+}
 .pd-thumb-play {
   position: absolute;
   inset: 0;
@@ -481,8 +463,10 @@ nav.main-nav a:hover, nav.main-nav a.active {
 .about-hero { text-align: center; padding: 60px 24px; }
 .about-hero p { max-width: 640px; margin: 14px auto 0; color: var(--muted); }
 .about-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 24px; margin-top: 40px; }
-.about-card { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; text-align: center; }
-.about-card .icon { font-size: 30px; margin-bottom: 10px; }
+.about-card { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; text-align: center; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease; }
+.about-card:hover { transform: translateY(-6px); border-color: var(--gold); }
+.about-card .icon { font-size: 30px; margin-bottom: 10px; transition: transform 0.3s ease; }
+.about-card:hover .icon { transform: scale(1.15) rotate(-5deg); }
 .contact-form { display: grid; gap: 14px; max-width: 480px; }
 .contact-form input, .contact-form textarea {
   background: var(--panel);
@@ -510,8 +494,8 @@ footer.site-footer {
 }
 @media (max-width: 800px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
 .footer-grid h4 { color: var(--gold); font-size: 13px; letter-spacing: 1px; margin-bottom: 14px; text-transform: uppercase; }
-.footer-grid p, .footer-grid a { font-size: 13px; color: var(--muted); display: block; margin-bottom: 8px; }
-.footer-grid a:hover { color: var(--gold-light); }
+.footer-grid p, .footer-grid a { font-size: 13px; color: var(--muted); display: block; margin-bottom: 8px; transition: color 0.2s ease, transform 0.2s ease; }
+.footer-grid a:hover { color: var(--gold-light); transform: translateX(3px); }
 .footer-bottom {
   text-align: center;
   font-size: 12px;
@@ -587,3 +571,122 @@ footer.site-footer {
 /* ---------- Utility ---------- */
 .center { text-align: center; }
 .mt-lg { margin-top: 40px; }
+
+/* ================= Animations ================= */
+
+/* Scroll-reveal: elements fade + rise into view once, via RevealObserver */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+/* Stagger children of a revealed group (product grids, footer columns, etc.) */
+.reveal-group:not(.in-view) > * {
+  opacity: 0;
+}
+.reveal-group.in-view > * {
+  animation: reveal-stagger 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.reveal-group.in-view > *:nth-child(1) { animation-delay: 0.03s; }
+.reveal-group.in-view > *:nth-child(2) { animation-delay: 0.09s; }
+.reveal-group.in-view > *:nth-child(3) { animation-delay: 0.15s; }
+.reveal-group.in-view > *:nth-child(4) { animation-delay: 0.21s; }
+.reveal-group.in-view > *:nth-child(5) { animation-delay: 0.27s; }
+.reveal-group.in-view > *:nth-child(6) { animation-delay: 0.33s; }
+.reveal-group.in-view > *:nth-child(n+7) { animation-delay: 0.38s; }
+@keyframes reveal-stagger {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Hero: entrance on first load, no scroll trigger needed */
+.hero-text > * {
+  opacity: 0;
+  animation: hero-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.hero-text .eyebrow { animation-delay: 0.05s; }
+.hero-text h1 { animation-delay: 0.15s; }
+.hero-text p { animation-delay: 0.28s; }
+.hero-text .btn { animation-delay: 0.4s; }
+.hero-visual { opacity: 0; animation: hero-in-scale 0.9s 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+@keyframes hero-in {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes hero-in-scale {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Product card hover: lift, glow, image zoom */
+.product-card { transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
+.product-card:hover { box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45); }
+.product-card .thumb { overflow: hidden; }
+.product-card .thumb img { transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+.product-card:hover .thumb img { transform: scale(1.08); }
+.product-card .name { transition: color 0.2s ease; }
+.product-card:hover .name { color: var(--gold-light); }
+
+/* Buttons: lift on hover, press on click */
+.btn { transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+.btn:not([disabled]):hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35); }
+.btn:not([disabled]):active { transform: translateY(0); box-shadow: none; }
+
+/* Brand chips: pop on hover */
+.brand-chip { transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+.brand-chip:hover { transform: translateY(-3px) scale(1.04); }
+
+/* Cart badge: pop when the count changes */
+.cart-badge { animation: cart-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
+@keyframes cart-pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.45); }
+  100% { transform: scale(1); }
+}
+
+/* Mobile nav: slide + fade open */
+.mobile-nav {
+  max-height: 0;
+  overflow: hidden;
+  padding-top: 0;
+  padding-bottom: 0;
+  opacity: 0;
+  border-bottom: 1px solid transparent;
+  transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, padding 0.35s ease, border-color 0.35s ease;
+}
+.mobile-nav.open {
+  max-height: 420px;
+  padding: 12px 24px 18px;
+  opacity: 1;
+  border-bottom-color: var(--border);
+}
+
+/* WhatsApp float: gentle attention pulse */
+.whatsapp-float { transition: transform 0.25s ease; }
+.whatsapp-float:hover { transform: scale(1.08); }
+.whatsapp-float::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #25d366;
+  animation: whatsapp-pulse 2.4s ease-out infinite;
+  z-index: -1;
+}
+@keyframes whatsapp-pulse {
+  0% { transform: scale(1); opacity: 0.55; }
+  100% { transform: scale(1.9); opacity: 0; }
+}
+
+/* Logo mark: subtle breathing glow */
+.logo-mark { transition: transform 0.3s ease; }
+.logo:hover .logo-mark { transform: scale(1.08) rotate(-4deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .reveal-group > *, .hero-text > *, .hero-visual { animation: none !important; transition: none !important; opacity: 1 !important; transform: none !important; }
+  .whatsapp-float::before { animation: none; }
+}

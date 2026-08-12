@@ -40,7 +40,7 @@ export default async function HomePage() {
       </section>
 
       <section className="brand-strip">
-        <div className="container">
+        <div className="container reveal-group">
           {brands.length ? (
             brands.map((b) => (
               <Link key={b} className="brand-chip" href={`/shop?brand=${encodeURIComponent(b)}`}>
@@ -55,7 +55,7 @@ export default async function HomePage() {
 
       <section className="section">
         <div className="container">
-          <div className="section-head">
+          <div className="section-head reveal">
             <h2>Bestsellers</h2>
             <Link href="/shop">View all →</Link>
           </div>
@@ -65,7 +65,7 @@ export default async function HomePage() {
 
       <section className="section" style={{ paddingTop: 0 }}>
         <div className="container">
-          <div className="section-head">
+          <div className="section-head reveal">
             <h2>New Arrivals</h2>
             <Link href="/shop">View all →</Link>
           </div>

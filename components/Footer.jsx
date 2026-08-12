@@ -4,7 +4,7 @@ import Image from "next/image";
 export default function Footer() {
   return (
     <footer className="site-footer">
-      <div className="footer-grid">
+      <div className="footer-grid reveal-group">
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <Image src="/logo-mark.png" alt="The Dial Edit" width={36} height={36} className="logo-mark" />
