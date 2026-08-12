@@ -8,7 +8,7 @@ export default function Footer() {
           <div className="logo-text">
             <span className="the">THE</span> <span className="dial">DIAL</span> <span className="the">EDIT</span>
           </div>
-          <p style={{ marginTop: 12 }}>Authentic watches across every brand you love, shipped pan India.</p>
+          <p style={{ marginTop: 12 }}>Best high quality watches across every brand you love, we ship pan India.</p>
         </div>
         <div>
           <h4>Shop</h4>
@@ -26,7 +26,6 @@ export default function Footer() {
         <div>
           <h4>Get in Touch</h4>
           <p>Pan India Delivery</p>
-          <p>Cash on Delivery Available</p>
           <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
         </div>
       </div>
