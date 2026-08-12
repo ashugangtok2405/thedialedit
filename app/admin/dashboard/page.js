@@ -13,7 +13,6 @@ const EMPTY_FORM = {
   category: "Men",
   price: "",
   mrp: "",
-  rating: "4.5",
   inStock: true,
   description: "",
 };
@@ -23,7 +22,7 @@ export default function AdminDashboardPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState(EMPTY_FORM);
-  const [imageFile, setImageFile] = useState(null);
+  const [mediaFiles, setMediaFiles] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -49,6 +48,14 @@ export default function AdminDashboardPage() {
     setForm((f) => ({ ...f, [field]: value }));
   }
 
+  function addFiles(fileList) {
+    setMediaFiles((prev) => [...prev, ...Array.from(fileList)]);
+  }
+
+  function removeFile(index) {
+    setMediaFiles((prev) => prev.filter((_, i) => i !== index));
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
@@ -61,10 +68,9 @@ export default function AdminDashboardPage() {
     fd.set("category", form.category);
     fd.set("price", form.price);
     fd.set("mrp", form.mrp);
-    fd.set("rating", form.rating);
     fd.set("inStock", String(form.inStock));
     fd.set("description", form.description);
-    if (imageFile) fd.set("image", imageFile);
+    mediaFiles.forEach((file) => fd.append("media", file));
 
     const res = await fetch("/api/admin/products", { method: "POST", body: fd });
     const data = await res.json();
@@ -77,8 +83,8 @@ export default function AdminDashboardPage() {
 
     setSuccess(`"${data.product.name}" added.`);
     setForm(EMPTY_FORM);
-    setImageFile(null);
-    document.getElementById("image-input").value = "";
+    setMediaFiles([]);
+    document.getElementById("media-input").value = "";
     loadProducts();
   }
 
@@ -122,8 +128,8 @@ export default function AdminDashboardPage() {
               <input type="text" value={form.brand} onChange={(e) => updateField("brand", e.target.value)} placeholder="e.g. Titan, Rolex, Fossil…" required />
             </div>
             <div>
-              <label>Product Name *</label>
-              <input type="text" value={form.name} onChange={(e) => updateField("name", e.target.value)} placeholder="e.g. Neo Classic Analog" required />
+              <label>Product Name</label>
+              <input type="text" value={form.name} onChange={(e) => updateField("name", e.target.value)} placeholder="e.g. Neo Classic Analog (optional)" />
             </div>
             <div>
               <label>Category</label>
@@ -134,10 +140,6 @@ export default function AdminDashboardPage() {
                   </option>
                 ))}
               </select>
-            </div>
-            <div>
-              <label>Rating (1–5)</label>
-              <input type="number" min="1" max="5" step="0.1" value={form.rating} onChange={(e) => updateField("rating", e.target.value)} />
             </div>
             <div>
               <label>Price (₹) *</label>
@@ -151,9 +153,39 @@ export default function AdminDashboardPage() {
               <label>Description</label>
               <textarea rows={3} value={form.description} onChange={(e) => updateField("description", e.target.value)} />
             </div>
-            <div>
-              <label>Photo</label>
-              <input id="image-input" type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files[0] || null)} />
+            <div className="full">
+              <label>Photos &amp; Videos</label>
+              <input
+                id="media-input"
+                type="file"
+                accept="image/*,video/*"
+                multiple
+                onChange={(e) => {
+                  addFiles(e.target.files);
+                  e.target.value = "";
+                }}
+              />
+              {mediaFiles.length > 0 && (
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 12 }}>
+                  {mediaFiles.map((file, i) => (
+                    <div key={i} style={{ position: "relative", width: 72, height: 72, borderRadius: 6, overflow: "hidden", border: "1px solid var(--border)", background: "var(--black-soft)" }}>
+                      {file.type.startsWith("video/") ? (
+                        <video src={URL.createObjectURL(file)} style={{ width: "100%", height: "100%", objectFit: "cover" }} muted />
+                      ) : (
+                        <img src={URL.createObjectURL(file)} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => removeFile(i)}
+                        style={{ position: "absolute", top: 2, right: 2, background: "rgba(0,0,0,0.7)", color: "#fff", border: "none", borderRadius: "50%", width: 20, height: 20, fontSize: 12, lineHeight: 1 }}
+                        aria-label="Remove"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 20 }}>
               <input type="checkbox" checked={form.inStock} onChange={(e) => updateField("inStock", e.target.checked)} id="instock" />
@@ -195,6 +227,9 @@ export default function AdminDashboardPage() {
                   <td>
                     <div style={{ color: "var(--gold)", fontSize: 11 }}>{p.brand}</div>
                     {p.name}
+                    {p.product_media?.length > 1 && (
+                      <span style={{ color: "var(--muted)", fontSize: 11 }}> · {p.product_media.length} files</span>
+                    )}
                   </td>
                   <td>{p.category}</td>
                   <td>{formatINR(p.price)}</td>

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { productImage } from "@/lib/placeholder";
-import { formatINR, starString, discountPct } from "@/lib/format";
+import { formatINR, discountPct } from "@/lib/format";
 import { addToCart } from "@/lib/cart";
 
 export default function ProductCard({ product }) {
@@ -26,9 +26,6 @@ export default function ProductCard({ product }) {
         <Link href={`/product/${product.id}`}>
           <div className="name">{product.name}</div>
         </Link>
-        <div className="rating">
-          {starString(product.rating)} <span style={{ color: "var(--muted)" }}>({product.rating})</span>
-        </div>
         <div className="price-row">
           <span className="price">{formatINR(product.price)}</span>
           {product.mrp ? <span className="mrp">{formatINR(product.mrp)}</span> : null}

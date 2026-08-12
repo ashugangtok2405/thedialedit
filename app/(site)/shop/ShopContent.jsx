@@ -15,7 +15,6 @@ export default function ShopContent() {
   const [selectedBrands, setSelectedBrands] = useState(() => (searchParams.get("brand") ? [searchParams.get("brand")] : []));
   const [selectedCategories, setSelectedCategories] = useState(() => (searchParams.get("category") ? [searchParams.get("category")] : []));
   const [maxPrice, setMaxPrice] = useState(50000);
-  const [minRating, setMinRating] = useState(0);
   const [inStockOnly, setInStockOnly] = useState(false);
   const [query, setQuery] = useState(searchParams.get("q") || "");
   const [sort, setSort] = useState("popular");
@@ -29,7 +28,7 @@ export default function ShopContent() {
     setLoading(true);
     supabasePublic
       .from("products")
-      .select("*")
+      .select("*, product_media(*)")
       .order("created_at", { ascending: false })
       .then(({ data }) => {
         if (active) {
@@ -51,7 +50,6 @@ export default function ShopContent() {
       if (selectedBrands.length && !selectedBrands.includes(p.brand)) return false;
       if (selectedCategories.length && !selectedCategories.includes(p.category)) return false;
       if (p.price > maxPrice) return false;
-      if (p.rating < minRating) return false;
       if (inStockOnly && !p.in_stock) return false;
       if (query && !`${p.brand} ${p.name}`.toLowerCase().includes(query.toLowerCase())) return false;
       return true;
@@ -59,10 +57,9 @@ export default function ShopContent() {
 
     if (sort === "price-asc") list.sort((a, b) => a.price - b.price);
     else if (sort === "price-desc") list.sort((a, b) => b.price - a.price);
-    else if (sort === "rating") list.sort((a, b) => b.rating - a.rating);
 
     return list;
-  }, [products, selectedBrands, selectedCategories, maxPrice, minRating, inStockOnly, query, sort]);
+  }, [products, selectedBrands, selectedCategories, maxPrice, inStockOnly, query, sort]);
 
   function toggleValue(list, setList, value) {
     setList(list.includes(value) ? list.filter((v) => v !== value) : [...list, value]);
@@ -72,7 +69,6 @@ export default function ShopContent() {
     setSelectedBrands([]);
     setSelectedCategories([]);
     setMaxPrice(priceCeiling);
-    setMinRating(0);
     setInStockOnly(false);
     setQuery("");
   }
@@ -117,16 +113,6 @@ export default function ShopContent() {
               <div className="price-range-val">Up to {formatINR(maxPrice > priceCeiling ? priceCeiling : maxPrice)}</div>
             </div>
 
-            <h3>Rating</h3>
-            <div className="filter-group">
-              <label>
-                <input type="checkbox" checked={minRating === 4} onChange={() => setMinRating(minRating === 4 ? 0 : 4)} /> 4★ &amp; above
-              </label>
-              <label>
-                <input type="checkbox" checked={minRating === 4.5} onChange={() => setMinRating(minRating === 4.5 ? 0 : 4.5)} /> 4.5★ &amp; above
-              </label>
-            </div>
-
             <label>
               <input type="checkbox" checked={inStockOnly} onChange={(e) => setInStockOnly(e.target.checked)} /> In stock only
             </label>
@@ -145,7 +131,6 @@ export default function ShopContent() {
                 <option value="popular">Sort: Popularity</option>
                 <option value="price-asc">Price: Low to High</option>
                 <option value="price-desc">Price: High to Low</option>
-                <option value="rating">Rating</option>
               </select>
             </div>
             {!loading && <ProductGrid products={results} emptyMessage="No watches match these filters. Try clearing some." />}

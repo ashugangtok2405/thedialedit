@@ -14,13 +14,13 @@ export async function generateMetadata({ params }) {
 
 export default async function ProductPage({ params }) {
   const { id } = await params;
-  const { data: product } = await supabasePublic.from("products").select("*").eq("id", id).single();
+  const { data: product } = await supabasePublic.from("products").select("*, product_media(*)").eq("id", id).single();
 
   if (!product) notFound();
 
   const { data: related } = await supabasePublic
     .from("products")
-    .select("*")
+    .select("*, product_media(*)")
     .eq("brand", product.brand)
     .neq("id", product.id)
     .limit(4);

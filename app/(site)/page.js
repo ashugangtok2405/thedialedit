@@ -8,12 +8,12 @@ export const dynamic = "force-dynamic";
 export default async function HomePage() {
   const { data } = await supabasePublic
     .from("products")
-    .select("*")
+    .select("*, product_media(*)")
     .order("created_at", { ascending: false });
 
   const products = data || [];
-  const bestsellers = [...products].sort((a, b) => b.rating - a.rating).slice(0, 4);
   const newArrivals = products.slice(0, 4);
+  const bestsellers = products.slice(4, 8);
   const brands = [...new Set(products.map((p) => p.brand))];
 
   return (

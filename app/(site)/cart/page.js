@@ -19,7 +19,7 @@ export default function CartPage() {
       return;
     }
     const ids = cart.map((i) => i.id);
-    const { data } = await supabasePublic.from("products").select("*").in("id", ids);
+    const { data } = await supabasePublic.from("products").select("*, product_media(*)").in("id", ids);
     const items = cart
       .map((c) => {
         const product = (data || []).find((p) => p.id === c.id);

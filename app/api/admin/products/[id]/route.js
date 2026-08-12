@@ -25,6 +25,11 @@ export async function PATCH(request, { params }) {
 
 export async function DELETE(request, { params }) {
   const { id } = await params;
+
+  const { data: media } = await supabaseAdmin.from("product_media").select("url").eq("product_id", id);
+  const paths = (media || []).map((m) => m.url.split("/product-images/")[1]).filter(Boolean);
+  if (paths.length) await supabaseAdmin.storage.from("product-images").remove(paths);
+
   const { error } = await supabaseAdmin.from("products").delete().eq("id", id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ ok: true });

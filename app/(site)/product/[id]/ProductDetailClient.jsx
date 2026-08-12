@@ -1,14 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { productImage } from "@/lib/placeholder";
-import { formatINR, starString, discountPct, buildWhatsAppBuyNowUrl } from "@/lib/format";
+import { productImage, sortedMedia } from "@/lib/placeholder";
+import { formatINR, discountPct, buildWhatsAppBuyNowUrl } from "@/lib/format";
 import { addToCart } from "@/lib/cart";
 
 export default function ProductDetailClient({ product }) {
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
   const off = discountPct(product);
+
+  const media = sortedMedia(product);
+  const gallery = media.length ? media : [{ type: "image", url: productImage(product) }];
+  const active = gallery[Math.min(activeIndex, gallery.length - 1)];
 
   function handleAdd() {
     addToCart(product.id, qty);
@@ -18,15 +23,28 @@ export default function ProductDetailClient({ product }) {
 
   return (
     <div className="product-detail">
-      <div className="pd-image">
-        <img src={productImage(product)} alt={`${product.brand} ${product.name}`} />
+      <div>
+        <div className="pd-image">
+          {active.type === "video" ? (
+            <video src={active.url} controls playsInline />
+          ) : (
+            <img src={active.url} alt={`${product.brand} ${product.name}`} />
+          )}
+        </div>
+        {gallery.length > 1 && (
+          <div className="pd-thumbs">
+            {gallery.map((m, i) => (
+              <button key={i} className={`pd-thumb${i === activeIndex ? " active" : ""}`} onClick={() => setActiveIndex(i)}>
+                {m.type === "video" ? <video src={m.url} muted /> : <img src={m.url} alt="" />}
+                {m.type === "video" && <span className="pd-thumb-play">▶</span>}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
       <div className="pd-info">
         <span className="brand">{product.brand}</span>
         <h1>{product.name}</h1>
-        <div className="rating">
-          {starString(product.rating)} <span style={{ color: "var(--muted)" }}>({product.rating} rating)</span>
-        </div>
         <div className="price-row">
           <span className="price">{formatINR(product.price)}</span>
           {product.mrp ? <span className="mrp">{formatINR(product.mrp)}</span> : null}
