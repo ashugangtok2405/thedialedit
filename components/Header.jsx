@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { cartCount, subscribeToCart } from "@/lib/cart";
 
@@ -37,6 +38,7 @@ export default function Header() {
     <header className="site-header">
       <div className="header-inner">
         <Link href="/" className="logo">
+          <Image src="/logo-mark.png" alt="The Dial Edit" width={44} height={44} className="logo-mark" priority />
           <div>
             <div className="logo-text">
               <span className="the">THE</span> <span className="dial">DIAL</span> <span className="the">EDIT</span>

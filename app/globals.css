@@ -78,6 +78,10 @@ header.site-header {
   gap: 8px;
   flex-shrink: 0;
 }
+.logo-mark {
+  border-radius: 50%;
+  flex-shrink: 0;
+}
 .logo-text {
   font-family: var(--font-serif);
   font-size: 22px;
@@ -183,7 +187,10 @@ nav.main-nav a:hover, nav.main-nav a.active {
 
 /* ---------- Hero ---------- */
 .hero {
-  background: radial-gradient(ellipse at 30% 20%, #1c1808 0%, var(--black) 60%);
+  background:
+    linear-gradient(to right, rgba(0, 0, 0, 0) 0%, #000000 70%),
+    radial-gradient(ellipse at 22% 20%, #1c1808 0%, #000000 55%);
+  background-color: #000000;
   border-bottom: 1px solid var(--border);
   padding: 70px 24px;
 }

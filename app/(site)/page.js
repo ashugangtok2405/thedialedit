@@ -1,7 +1,7 @@
 import Link from "next/link";
+import Image from "next/image";
 import { supabasePublic } from "@/lib/supabasePublic";
 import ProductGrid from "@/components/ProductGrid";
-import HeroWatch from "@/components/HeroWatch";
 
 export const dynamic = "force-dynamic";
 
@@ -34,7 +34,7 @@ export default async function HomePage() {
             </Link>
           </div>
           <div className="hero-visual">
-            <HeroWatch />
+            <Image src="/logo-mark.png" alt="The Dial Edit" width={320} height={320} priority style={{ width: "100%", maxWidth: 320, height: "auto" }} />
           </div>
         </div>
       </section>

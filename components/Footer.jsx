@@ -1,12 +1,16 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer() {
   return (
     <footer className="site-footer">
       <div className="footer-grid">
         <div>
-          <div className="logo-text">
-            <span className="the">THE</span> <span className="dial">DIAL</span> <span className="the">EDIT</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <Image src="/logo-mark.png" alt="The Dial Edit" width={36} height={36} className="logo-mark" />
+            <div className="logo-text">
+              <span className="the">THE</span> <span className="dial">DIAL</span> <span className="the">EDIT</span>
+            </div>
           </div>
           <p style={{ marginTop: 12 }}>Best high quality watches across every brand you love, we ship pan India.</p>
         </div>

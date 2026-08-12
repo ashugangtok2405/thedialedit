@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function AdminLoginPage() {
   const [password, setPassword] = useState("");
@@ -29,8 +30,11 @@ export default function AdminLoginPage() {
   return (
     <div className="admin-shell" style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
       <form onSubmit={handleSubmit} className="admin-card" style={{ width: "100%", maxWidth: 360 }}>
-        <div className="logo-text" style={{ marginBottom: 4 }}>
-          <span className="the">THE</span> <span className="dial">DIAL</span> <span className="the">EDIT</span>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
+          <Image src="/logo-mark.png" alt="The Dial Edit" width={44} height={44} className="logo-mark" />
+          <div className="logo-text">
+            <span className="the">THE</span> <span className="dial">DIAL</span> <span className="the">EDIT</span>
+          </div>
         </div>
         <p style={{ color: "var(--muted)", fontSize: 13, marginBottom: 20 }}>Admin Login</p>
         <input
